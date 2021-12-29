@@ -1,10 +1,12 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using LegacyApp;
+using LegacyApp.CreditStrategies;
 using LegacyApp.DataAccess;
 using LegacyApp.Models;
 using LegacyApp.Repositories;
 using LegacyApp.Services;
+using LegacyApp.Validators;
 using NSubstitute;
 using System;
 using Xunit;
@@ -23,7 +25,11 @@ namespace RefactoringTest.UnitTests
 
         public UserServiceTests()
         {
-            _userService = new UserService(_dateTimeProvider, _clientRepository, _userCreditService, _userDataAccess);
+            _userService = new UserService(
+                _clientRepository,
+                _userDataAccess,
+                new UserValidator(_dateTimeProvider),
+                new CreditLimitStrategyFactory(_userCreditService));
         }
 
         [Fact]
